@@ -7,7 +7,7 @@
 
 import SwiftUI
 import AVKit
-struct VideoView: View {
+struct VideoContainer: View {
     @State private var player: AVPlayer?
     @State private var isVideoPlaying: Bool = false
     var isPlaying: Bool
@@ -19,6 +19,7 @@ struct VideoView: View {
         isVideoPlaying.toggle()
         player?.seek(to: .now)
     }
+    
     var body: some View {
         ZStack{
             VideoPlayer(player: player)
@@ -27,14 +28,10 @@ struct VideoView: View {
                         return
                     }
                     player = AVPlayer(url:url)
-                    player?.play()
+//                    player?.play()
                 }
                 .onChange(of: isPlaying){
-                    if isPlaying{
-                        player?.play()
-                    }else{
-                        player?.pause()
-                    }
+                    isPlaying ? player?.play() : player?.pause()
                 }
                 .onDisappear{
                     player?.pause()
@@ -48,8 +45,7 @@ struct VideoView: View {
                 Color.clear
             }
         }//ZStack
-        .frame(maxWidth: .infinity)
-        .containerRelativeFrame(.vertical, alignment: .center)
+        
     }
 }
 
