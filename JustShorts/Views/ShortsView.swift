@@ -6,27 +6,22 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct ShortsView: View {
     @State private var videoStore = VideoStore()
     @State private var scrollPosition: VideoListItem?
     var body: some View {
-        
         ScrollView(){
             LazyVStack(spacing:0){
                 ForEach(videoStore.videoList, id: \.self){ videoItem in
-                    
-                    
                     ZStack(alignment:.bottom){
                         VideoContainer(isPlaying: scrollPosition == videoItem, videoItem: videoItem)
                             .id(videoItem)
-                        
-                        ShortsInfoView()
+                        ShortsInfoView(videoItem: videoItem)
                             .containerRelativeFrame(.horizontal, alignment: .bottomLeading)
-                    
                     }
                     .containerRelativeFrame(.vertical, alignment: .center)
-                    
                 }//ForEach
                 
             }//LazyVStack
@@ -41,7 +36,6 @@ struct ShortsView: View {
         .task{
             await videoStore.fetchVideoList(search: "", page_current: 1, per_page: 10)
         }
-        
     }
 }
 

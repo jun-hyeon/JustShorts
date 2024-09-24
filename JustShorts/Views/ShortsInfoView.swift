@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShortsInfoView: View {
-    
+    var videoItem : VideoListItem
     var body: some View {
         VStack(alignment: .leading, spacing: 20){
             HStack{
@@ -24,21 +24,21 @@ struct ShortsInfoView: View {
                         .scaledToFit()
                         .foregroundStyle(.black)
                         .clipped()
+                        .background(.white)
                 }
                 .clipShape(Circle())
                 .frame(width: 40, height: 40)
                 
-                Text("강찬혁")
+                Text("\(videoItem.writer)")
                     .font(.body)
-                
+                    .foregroundStyle(.white)
             }
-            Text("최준현의 영상입니다")
+            
+            Text("\(videoItem.title)")
                 .lineLimit(1)
+                .foregroundStyle(.white)
                 
         }.padding()
     }
 }
 
-#Preview {
-    ShortsInfoView()
-}

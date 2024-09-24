@@ -11,9 +11,7 @@ struct ProfileSelctionView: View {
     @State private var photosPickerItem : PhotosPickerItem?
     @Binding var photoImage: UIImage?
     var body: some View {
-        
             VStack{
-                
                 PhotosPicker(selection: $photosPickerItem, matching: .images, photoLibrary: .shared()){
                     if let image = photoImage{
                         Image(uiImage: image)
@@ -41,7 +39,6 @@ struct ProfileSelctionView: View {
                     }
                     photoImage = UIImage(data: data)
                 }
-                
             }
             
     }

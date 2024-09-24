@@ -11,21 +11,18 @@ struct HomeScreen: View {
     @State private var selection = "shorts"
     var body: some View {
         TabView(selection: $selection) {
-            GeometryReader{ proxy in
-                ShortsView()
-                    .frame(width: proxy.size.width, height:  proxy.size.height)
-                    .safeAreaPadding(.bottom, proxy.safeAreaInsets.bottom)
-                   
-                
-            }
+            
+            ShortsView()
                 .tabItem {
                     Image(systemName: "arrowtriangle.right.fill")
                     Text("Shorts")
                 }
+            
             Text("")
                 .tabItem {
-                  Image(systemName: "plus")
+                    Image(systemName: "plus")
                 }
+            
             Text("profile")
                 .tabItem {
                     VStack{

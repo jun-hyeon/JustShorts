@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import AVKit
 @Observable
 class VideoStore{
     var videoList: [VideoListItem] = []
@@ -38,6 +39,5 @@ class VideoStore{
         }catch{
             print(error)
         }
-        
     }
 }
