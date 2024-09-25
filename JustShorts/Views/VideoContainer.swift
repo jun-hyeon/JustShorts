@@ -72,7 +72,7 @@ struct VideoContainer: View {
         ZStack{
             VideoPlayer(player:player)
                 .onAppear{
-                    NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: player?.currentItem, queue: .main) { _ in
+                    NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: player?.currentItem, queue: .main) { noti in
                         player?.seek(to: .zero)
                         player?.play()
                     }
@@ -91,6 +91,10 @@ struct VideoContainer: View {
                         player?.pause()
                         deactiveAudioSession()
                     }
+                }
+                .onDisappear{
+                    player?.pause()
+                    deactiveAudioSession()
                 }
                 .scaledToFill()
                 .disabled(true)

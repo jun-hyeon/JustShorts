@@ -12,7 +12,7 @@ struct ShortsInfoView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20){
             HStack{
-                AsyncImage(url: URL(string:"")) { image in
+                AsyncImage(url: URL(string:"\(videoItem.writer_profile)")) { image in
                     image
                         .resizable()
                         .scaledToFill()

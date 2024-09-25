@@ -28,7 +28,6 @@ struct TextFieldWithLine: View {
             }
             Divider()
                 .frame(height: 2)
-                
         }
     }
 }

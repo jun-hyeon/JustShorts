@@ -32,14 +32,12 @@ struct SignUpScreen: View {
         return emailPredicate.evaluate(with: email)
     }
     
-    
     var body: some View {
         NavigationStack{
             
             Spacer()
             
             VStack(spacing: 40){
-                
                 
                 ProfileSelctionView(photoImage: $photoImage)
                 

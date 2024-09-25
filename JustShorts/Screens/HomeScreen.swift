@@ -8,28 +8,30 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    @State private var selection = "shorts"
+    @State private var selection = 0
     var body: some View {
         TabView(selection: $selection) {
             
-            ShortsView()
-                .tabItem {
-                    Image(systemName: "arrowtriangle.right.fill")
-                    Text("Shorts")
-                }
+            Tab("Shorts", systemImage: "arrowtriangle.right.fill", value: 0) {
+                ShortsView()
+            }
             
-            Text("")
-                .tabItem {
-                    Image(systemName: "plus")
-                }
+            Tab(value: 1){
+                CameraView()
+            } label: {
+                Image(systemName: "plus")
+            }
             
-            Text("profile")
-                .tabItem {
-                    VStack{
-                        Image(systemName: "person.fill")
-                        Text("Profile")
-                    }
+            Tab(value: 2){
+                Text("profile")
+            }label: {
+                VStack{
+                    Image(systemName: "person.circle.fill")
+                    Text("Profile")
                 }
+            }
+            
+            
         }
         .onAppear{
             let appearance = UITabBarAppearance()

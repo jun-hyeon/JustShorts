@@ -27,9 +27,10 @@ struct VideoListItem: Decodable, Hashable{
     
     let video_no: Int
     let title: String
+    let memo: String
     let member_id: String
+    let writer_profile: String
     let writer: String
-    let video_key: String
     let upload_yn: String
     let reg_date: String
     let change_date: String
@@ -38,9 +39,10 @@ struct VideoListItem: Decodable, Hashable{
     enum CodingKeys: CodingKey {
         case video_no
         case title
+        case memo
         case member_id
+        case writer_profile
         case writer
-        case video_key
         case upload_yn
         case reg_date
         case change_date
