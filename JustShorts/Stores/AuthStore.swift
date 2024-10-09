@@ -33,6 +33,7 @@ enum SignUpState: Equatable{
     private var loginCancellable : Set<AnyCancellable> = []
     private var signUpCancellable: Set<AnyCancellable> = []
     
+    
     func login(email: String, password: String) async {
         loginState = .loading
         
@@ -72,7 +73,7 @@ enum SignUpState: Equatable{
         
         do{
             let resource = try Resource(url: "/auth/register", method: .post(JSONEncoder().encode(registerModel)), responseType: RegisterResponse.self)
-            try await networkManager.multipartLoad(resource: resource, imageData: data)
+            try await networkManager.multipartLoad(resource: resource, data: data, type: .image)
                 .sink { [weak self] completion in
                     switch completion{
                         

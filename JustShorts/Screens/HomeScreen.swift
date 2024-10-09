@@ -30,8 +30,6 @@ struct HomeScreen: View {
                     Text("Profile")
                 }
             }
-            
-            
         }
         .onAppear{
             let appearance = UITabBarAppearance()

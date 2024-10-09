@@ -18,7 +18,11 @@ struct VideoContainer: View {
     
     // 재생/일시정지 토글 함수
     private func togglePlayPause() {
-        isVideoPlaying ? player?.pause() : player?.play()
+        if isVideoPlaying {
+            player?.pause()
+        }else{
+            player?.play()
+        }
         isVideoPlaying.toggle()
         player?.seek(to: .now)
     }
@@ -48,24 +52,20 @@ struct VideoContainer: View {
         let asset = AVURLAsset(url: url)
         
         do{
-            let (_, _, _) = try await asset.load(.metadata ,.duration, .preferredTransform)
+            let (preffered, tracks) = try await asset.load(.preferredTransform, .tracks)
+            
+            print("Tracks:\n \(tracks)")
+            print("preffered:\n \(preffered)")
+            
+            if asset.status(of: .preferredTransform) == .loaded(preffered) && asset.status(of: .tracks) == .loaded(tracks){
+                print("-----loaded-----")
+                let playerItem = AVPlayerItem(asset: asset)
+                player?.replaceCurrentItem(with: playerItem)
+            }
+            
         }catch{
             print(error)
         }
-        switch asset.status(of: .metadata){
-            
-        case .notYetLoaded:
-            print("-----notYetLoaded-----")
-        case .loading:
-            print("-----loading-----")
-        case .loaded(_):
-            print("-----loaded-----")
-            let playerItem = AVPlayerItem(asset: asset)
-            player?.replaceCurrentItem(with: playerItem)
-        case .failed(let error):
-            print("-----failed----- \(error)")
-        }
-        
     }
     
     var body: some View {
@@ -105,7 +105,24 @@ struct VideoContainer: View {
                 Color.clear
             }
         }//ZStack
-        
+        .task{
+            player = AVPlayer()
+            await loadVideo(url: videoItem.video_url)
+            
+        }
+        .onChange(of: isPlaying){
+            if isPlaying{
+                player?.play()
+                activeAudioSession()
+            }else{
+                player?.pause()
+                deactiveAudioSession()
+            }
+        }
+        .onDisappear{
+            player?.pause()
+            NotificationCenter.default.removeObserver(self)
+        }
     }
 }
 

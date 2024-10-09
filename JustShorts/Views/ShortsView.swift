@@ -13,7 +13,7 @@ struct ShortsView: View {
     @State private var scrollPosition: VideoListItem?
     var body: some View {
         ScrollView(){
-            LazyVStack(spacing:0){
+            VStack(spacing:0){
                 ForEach(videoStore.videoList, id: \.self){ videoItem in
                     ZStack(alignment:.bottom){
                         VideoContainer(isPlaying: scrollPosition == videoItem, videoItem: videoItem)

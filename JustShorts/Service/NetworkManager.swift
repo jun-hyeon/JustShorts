@@ -36,6 +36,9 @@ enum NetworkError: Error{
     case httpMethodError
 }
 
+enum DataType{
+    case video, image
+}
 
 struct Resource<T: Decodable>{
     let url: String
@@ -107,7 +110,7 @@ actor NetworkManager{
             .eraseToAnyPublisher()
     }
     
-    func multipartLoad<T: Codable>(resource: Resource<T>, imageData: Data?) throws -> AnyPublisher<T, NetworkError>{
+    func multipartLoad<T: Codable>(resource: Resource<T>, data: Data?, type: DataType) throws -> AnyPublisher<T, NetworkError>{
         
         guard let url = URL(string:resource.url) else {
             return Fail(error: NetworkError.badURL).eraseToAnyPublisher()
@@ -135,7 +138,7 @@ actor NetworkManager{
             print(dict)
             
             //form-data작성
-            urlReqeust.httpBody = createBody(param: dict,imageData: imageData, boundary: uniqString)
+            urlReqeust.httpBody = createBody(param: dict,data: data, type: type, boundary: uniqString)
             
         case .put(let data):
             
@@ -145,7 +148,7 @@ actor NetworkManager{
             print(dict)
             
             //form-data작성
-            urlReqeust.httpBody = createBody(param: dict,imageData: imageData, boundary: uniqString)
+            urlReqeust.httpBody = createBody(param: dict, data: data, type: type, boundary: uniqString)
             
         case .delete:
             throw NetworkError.httpMethodError
@@ -173,7 +176,7 @@ actor NetworkManager{
     }
     
     
-    private func createBody(param dict: [String : Any], imageData: Data?, boundary: String)->Data{
+    private func createBody(param dict: [String : Any], data: Data?, type: DataType, boundary: String)->Data{
         
         var body = Data()
         for (key, value) in dict {
@@ -181,15 +184,29 @@ actor NetworkManager{
             body.append(Data("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".utf8))
             body.append(Data("\(value)\r\n".utf8))
         }
-        
-        if let image = imageData{
-            body.append(Data("--\(boundary)\r\n".utf8))
-            body.append(Data("Content-Disposition: form-data; name=\"profile_file\"; filename=\"image.jpg\"\r\n".utf8))
-            body.append(Data("Content-Type: image/jpeg\r\n\r\n".utf8))
-            body.append(image)
-            body.append(Data("\r\n".utf8))
+        if let data = data {
+            switch type {
+                
+            case .image:
+                body.append(Data("--\(boundary)\r\n".utf8))
+                body.append(Data("Content-Disposition: form-data; name=\"profile_file\"; filename=\"image.jpg\"\r\n".utf8))
+                body.append(Data("Content-Type: image/jpeg\r\n\r\n".utf8))
+                body.append(data)
+                body.append(Data("\r\n".utf8))
+                
+            case .video:
+                //            let fileData = try! Data(contentsOf: url)
+                //            let filename = videoURL.lastPathComponent
+                let mimeType = "video/mp4"
+                body.append(Data("--\(boundary)\r\n".utf8))
+                body.append(Data("Content-Disposition: form-data; name=\"profile_file\"; filename=\"video.mp4\"\r\n".utf8))
+                body.append(Data("Content-Type: \(mimeType)\r\n\r\n".utf8))
+                body.append(data)
+                body.append(Data("\r\n".utf8))
+            
+            }
         }
-        
+
         body.append(Data("--\(boundary)--\r\n".utf8))
         
         return body
